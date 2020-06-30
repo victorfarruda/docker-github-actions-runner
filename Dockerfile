@@ -1,22 +1,22 @@
-# hadolint ignore=DL3007
-FROM myoung34/github-runner-base:latest
-LABEL maintainer="myoung34@my.apsu.edu"
+FROM python:3.8
+LABEL maintainer="victor"
 
-ARG GH_RUNNER_VERSION="2.267.0"
+ARG GH_RUNNER_VERSION="2.169.1"
 ARG TARGETPLATFORM
-
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 WORKDIR /actions-runner
 COPY install_actions.sh /actions-runner
 
-RUN chmod +x /actions-runner/install_actions.sh \
-  && /actions-runner/install_actions.sh ${GH_RUNNER_VERSION} ${TARGETPLATFORM} \
-  && rm /actions-runner/install_actions.sh
+RUN chmod +x /actions-runner/install_actions.sh 
+RUN ./install_actions.sh ${GH_RUNNER_VERSION} ${TARGETPLATFORM} 
 
-COPY token.sh /
-RUN chmod +x /token.sh
+COPY config_actions.sh /actions-runner
+RUN chmod +x /actions-runner/config_actions.sh 
 
-COPY entrypoint.sh /
-RUN chmod +x /entrypoint.sh
-ENTRYPOINT ["/entrypoint.sh"]
+RUN chmod 777 .
+
+RUN groupadd -r vedois && useradd --no-log-init -r -g vedois vedois
+USER vedois
+RUN ./config_actions.sh 
+
+ENTRYPOINT ["/actions-runner/run.sh"]
