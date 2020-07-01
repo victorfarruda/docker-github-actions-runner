@@ -1,6 +1,15 @@
-version: '2.3'
-
+version: '3.3'
+networks:
+  database:
 services:
+  postgres:
+    image: postgres:11.7
+    environment:
+      - POSTGRES_DB=testdb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    networks:
+      - database
   worker:
     build: .
     image: 'django-demo'
@@ -15,6 +24,8 @@ services:
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'
       - '/tmp/runner:/tmp/runner'
+    networks:
+      - database
       # note: a quirk of docker-in-docker is that this path 
       # needs to be the same path on host and inside the container,
       # docker mgmt cmds run outside of docker but expect the paths from within
