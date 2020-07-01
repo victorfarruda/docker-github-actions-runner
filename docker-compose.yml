@@ -14,10 +14,6 @@ services:
     build: .
     image: 'django-demo'
     container_name: 'django-demo'
-    environment:
-      REPO_URL: 'https://github.com/victorfarruda/django-demo.git'
-      RUNNER_NAME: 'django-demo'
-      RUNNER_TOKEN: 'AEL5QIIM3TMLCRFLWFJWHCC67OFL6'
     security_opt:
       # needed on SELinux systems to allow docker container to manage other docker containers
       - label:disable
